@@ -17,11 +17,14 @@ object AppModule {
 
     @Provides
     @Singleton
-fun moduleRetrofit() : Retrofit = Retrofit.Builder()
+fun  provideRetrofit() : Retrofit = Retrofit.Builder()
         .baseUrl(URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
 
+    @Provides
+    @Singleton
+    fun provideRetrofitApiService(retrofit: Retrofit): LoginApiService = retrofit.create(LoginApiService::class.java)
 
 }
