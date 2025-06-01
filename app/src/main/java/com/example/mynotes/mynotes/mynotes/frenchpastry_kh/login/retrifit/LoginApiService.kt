@@ -19,7 +19,7 @@ interface LoginApiService {
 
     @FormUrlEncoded
     @POST("v1/auth/phone/login")
-    suspend fun sendCodeWithEmail(
+    suspend fun sendCodePhone(
         @Header("app-device-uid")deviceId:String,
         @Header("app-public-key")publicId:String,
         @Field("phone") phone:String
@@ -36,6 +36,5 @@ interface LoginApiService {
         @Field("code") code:String,
         @Field("phone") phone:String,
     ):Response<VerifyCodeData>
-
 
 }

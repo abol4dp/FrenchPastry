@@ -14,10 +14,11 @@ object AppModule {
 
 
     private const val URL = "https://pastry.alirezaahmadi.info/api/v1/"
+    var API_KEY = ""
 
     @Provides
     @Singleton
-fun  provideRetrofit() : Retrofit = Retrofit.Builder()
+    fun provideRetrofit(): Retrofit = Retrofit.Builder()
         .baseUrl(URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
@@ -25,6 +26,7 @@ fun  provideRetrofit() : Retrofit = Retrofit.Builder()
 
     @Provides
     @Singleton
-    fun provideRetrofitApiService(retrofit: Retrofit): LoginApiService = retrofit.create(LoginApiService::class.java)
+    fun provideRetrofitApiService(retrofit: Retrofit): LoginApiService =
+        retrofit.create(LoginApiService::class.java)
 
 }

@@ -1,5 +1,8 @@
 package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.retrifit
 
+import android.content.Context
+import android.util.Log
+import androidx.media3.common.DeviceInfo
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.retrifit.model.SendCodeData
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.retrifit.model.VerifyCodeData
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.retrifit.model.homemodel.HomeResponse
@@ -17,33 +20,98 @@ class LoginApiRepository @Inject constructor(
     val errorVerifyCode = MutableStateFlow(false)
 
 
-suspend fun getMain(){
-val response = try {
+    suspend fun getMain() {
+        val response = try {
 
-    apiService.getMain()
+            apiService.getMain()
 
-}catch (e : Exception){
-    return
-}
-if (response.isSuccessful){
-val body = response.body()
-    body.let {
-        main.let { it }
+        } catch (e: Exception) {
+            return
+        }
+        if (response.isSuccessful) {
+            val body = response.body()
+            body.let {
+                main.let { it }
+
+            }
+
+        }
 
     }
 
 
-}
+    suspend fun sendCodePhone(phone: String, context: Context) {
+        loading.emit(true)
+
+        val response = try {
+            apiService.sendCodePhone(
+                phone = phone,
+                deviceId = com.example.mynotes.mynotes.mynotes.frenchpastry_kh.ext.DeviceInfo.getDeviceID(
+                    context
+                ),
+                publicId = com.example.mynotes.mynotes.mynotes.frenchpastry_kh.ext.DeviceInfo.getPublicKey(
+                    context
+                )
+            )
+        } catch (e: Exception) {
+            Log.e("pasi", "senCodePhone error :${e.message.toString()}")
+            return
+        }
 
 
+        if (response.isSuccessful) {
+            loading.emit(false)
+            val body = response.body()
+            body?.let {
+                sendCodResponse.emit(it)
+            }
+        } else {
+            loading.emit(false)
+            Log.e("pasi", "senCodePhone not succes ")
+
+        }
+    }
 
 
+    suspend fun verifyCode(code: String, phone: String, context: Context) {
+
+        loading.emit(true)
+
+        val response = try {
+            apiService.verifyCode(
+                code = code,
+                phone = phone,
+                deviceId = com.example.mynotes.mynotes.mynotes.frenchpastry_kh.ext.DeviceInfo.getDeviceID(
+                    context
+                ),
+                publicId = com.example.mynotes.mynotes.mynotes.frenchpastry_kh.ext.DeviceInfo.getPublicKey(
+                    context
+                )
+            )
 
 
-}
+        } catch (e: Exception) {
+
+            Log.e("pasi", "verifyCode error :${e.message.toString()}")
+            return
+
+        }
+
+        if (response.isSuccessful) {
+            loading.emit(false)
+            val body = response.body()
+            body?.let {
+                verifyCodeResponse.emit(it)
+            }
+        } else {
+            loading.emit(false)
+            errorVerifyCode.emit(true)
+            Log.e("pasi", "verifyCode not succes ")
+
+        }
 
 
-
+    }
 
 
 }
