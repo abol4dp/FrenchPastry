@@ -1,4 +1,4 @@
-package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.retrifit.model.homemodel
+package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.homemodel
 
 data class PastryItem(
     val ID: Int = 38,
