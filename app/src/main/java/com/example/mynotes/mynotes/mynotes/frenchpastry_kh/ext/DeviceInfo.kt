@@ -5,7 +5,7 @@ import android.content.Context
 import android.os.Build
 import android.provider.Settings
 import android.provider.SyncStateContract
-import com.android.identity.util.Constants
+
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.retrifit.AppModule
 import java.math.BigInteger
 import java.security.MessageDigest
