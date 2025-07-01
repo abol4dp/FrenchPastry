@@ -39,7 +39,7 @@ class LoginApiRepository @Inject constructor(
     }
 
 
-    suspend fun sendCodePhone(phone: String, context: Context) {
+    suspend fun sendCodePhones(phone: String, context: Context) {
         loading.emit(true)
 
         val response = try {
