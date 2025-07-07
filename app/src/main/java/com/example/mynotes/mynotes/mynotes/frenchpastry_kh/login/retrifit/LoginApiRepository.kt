@@ -2,6 +2,7 @@ package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.retrifit
 
 import android.content.Context
 import android.util.Log
+import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.ext.DeviceInfo
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.SendCodeData
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.VerifyCodeData
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.homemodel.HomeResponse
@@ -10,6 +11,15 @@ import javax.inject.Inject
 
 class LoginApiRepository @Inject constructor(
     private val apiService: LoginApiService
+
+
+
+
+
+
+
+
+
 
 ) {
     val main = MutableStateFlow<HomeResponse>(HomeResponse())
@@ -39,80 +49,52 @@ class LoginApiRepository @Inject constructor(
     }
 
 
-    suspend fun sendCodePhones(phone: String, context: Context) {
-        loading.emit(true)
+    suspend fun sendCodePhones(phone: String, context: Context): Result<SendCodeData> {
 
-        val response = try {
-            apiService.sendCodePhone(
+        return try {
+            val response = apiService.sendCodePhone(
                 phone = phone,
-                deviceId = com.example.mynotes.mynotes.mynotes.frenchpastry_kh.ext.DeviceInfo.getDeviceID(
-                    context
-                ),
-                publicId = com.example.mynotes.mynotes.mynotes.frenchpastry_kh.ext.DeviceInfo.getPublicKey(
-                    context
-                )
+                deviceId = DeviceInfo.getDeviceID(context),
+                publicId = DeviceInfo.getPublicKey(context)
             )
 
-
-        } catch (e: Exception) {
-            Log.e("pasi", "senCodePhone error :${e.message.toString()}")
-            return
-        }
-
-
-        if (response.isSuccessful) {
-            loading.emit(false)
-            val body = response.body()
-            body?.let {
-                sendCodResponse.emit(it)
+            if (response.isSuccessful) {
+                response.body()?.let { Result.success(it) }
+                    ?: Result.failure(Exception("پاسخ خالی"))
+            } else {
+                Result.failure(Exception("خطا: ${response.message()}"))
             }
-        } else {
-            loading.emit(false)
-            Log.e("pasi", "senCodePhone not succes ")
+        } catch (e: Exception) {
 
+            Result.failure(Exception("خطا در اتصال: ${e.message}"))
         }
     }
 
+suspend fun verifyCode(code: String, phone: String, context: Context): Result<VerifyCodeData> {
 
-    suspend fun verifyCode(code: String, phone: String, context: Context) {
-
-        loading.emit(true)
-
-        val response = try {
-            apiService.verifyCode(
-                code = code,
-                phone = phone,
-                deviceId = com.example.mynotes.mynotes.mynotes.frenchpastry_kh.ext.DeviceInfo.getDeviceID(
-                    context
-                ),
-                publicId = com.example.mynotes.mynotes.mynotes.frenchpastry_kh.ext.DeviceInfo.getPublicKey(
-                    context
-                )
-            )
-
-
-        } catch (e: Exception) {
-
-            Log.e("pasi", "verifyCode error :${e.message.toString()}")
-            return
-
-        }
+    return try {
+        val response = apiService.verifyCode(
+            code = code,
+            phone = phone,
+            deviceId = DeviceInfo.getDeviceID(context),
+            publicId = DeviceInfo.getPublicKey(context)
+        )
 
         if (response.isSuccessful) {
-            loading.emit(false)
-            val body = response.body()
-            body?.let {
-                verifyCodeResponse.emit(it)
-            }
+            response.body()?.let { Result.success(it) } ?: Result.failure(Exception("پاسخ خالی"))
         } else {
-            loading.emit(false)
-            errorVerifyCode.emit(true)
-            Log.e("pasi", "verifyCode not succes ")
-
+            Result.failure(Exception("خطا: ${response.message()}"))
         }
+    } catch (e: Exception) {
 
-
+        Result.failure(Exception("خطا در اتصال: ${e.message}"))
     }
+}
+
+
+
+
 
 
 }
+
