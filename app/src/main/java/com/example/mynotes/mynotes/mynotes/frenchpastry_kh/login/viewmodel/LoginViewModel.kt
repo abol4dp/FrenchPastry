@@ -3,19 +3,15 @@ package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.viewmodel
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.retrifit.LoginApiRepository
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.SendCodeData
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.VerifyCodeData
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.homemodel.HomeResponse
-import dagger.hilt.android.HiltAndroidApp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -39,7 +35,8 @@ class LoginViewModel @Inject constructor(
     private val _verifyCode = MutableStateFlow<VerifyCodeData>(VerifyCodeData())
     val verifyCode: StateFlow<VerifyCodeData> = _verifyCode.asStateFlow()
 
-    val _loading = MutableStateFlow(false)
+    private val _loading = MutableStateFlow(false)
+    val loading: StateFlow<Boolean> = _loading.asStateFlow()
 
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
@@ -48,31 +45,40 @@ class LoginViewModel @Inject constructor(
     fun getMain() {
         viewModelScope.launch(Dispatchers.IO) {
             repository.getMain()
-
         }
 
     }
 
 
-    fun sendCode(phone: String, context: Context) : Flow<Result<SendCodeData>> = flow{
-
-
-
-
+    fun sendCodeNumber(phone: String, context: Context) {
+        viewModelScope.launch {
+            _loading.emit(true)
+            _errorMessage.emit(null)
+            val result = repository.sendCodePhones(phone, context)
+            result.onSuccess { response: SendCodeData ->
+                _sendCode.emit(response)
+                if (response.success != 1) {
+                    _errorMessage.emit(response.message)
+                }
+            }.onFailure { exception ->
+                _errorMessage.emit(exception.message ?: "خطا در ارسال کد")
             }
+            _loading.emit(false)
 
 
         }
 
 
-
-    
-
+    }
 
 
-    fun verifyCode(){
+    fun verifyCode(code: String, phone: String, context: Context) {
+
+    }
+
+}
 
 
-    }//
+
 
 
