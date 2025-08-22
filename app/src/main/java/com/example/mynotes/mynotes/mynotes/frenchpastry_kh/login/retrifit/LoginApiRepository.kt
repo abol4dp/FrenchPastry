@@ -1,12 +1,14 @@
 package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.retrifit
 
 import android.content.Context
+import android.devicelock.DeviceId
 import android.util.Log
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.ext.DeviceInfo
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.SendCodeData
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.VerifyCodeData
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.homemodel.HomeResponse
 import kotlinx.coroutines.flow.MutableStateFlow
+import java.security.PublicKey
 import javax.inject.Inject
 
 class LoginApiRepository @Inject constructor(
@@ -36,20 +38,36 @@ class LoginApiRepository @Inject constructor(
     suspend fun sendCodePhones(phone: String, context: Context): Result<SendCodeData> {
 
         return try {
+            val deviceId = DeviceInfo.getDeviceID(context)
+            val publicId = DeviceInfo.getPublicKey(context)
+
+            Log.d(
+                "LOGIN/REPO",
+                "sendCodePhones -> phone=$phone, deviceId=$deviceId, publicKey=$publicId"
+            )
+
             val response = apiService.sendCodePhone(
                 phone = phone,
                 deviceId = DeviceInfo.getDeviceID(context),
                 publicId = DeviceInfo.getPublicKey(context)
             )
+            Log.d(
+                "LOGIN/REPO",
+                "HTTP sendCode -> code=${response.code()}, message=${response.message()}"
+            )
 
             if (response.isSuccessful) {
-                response.body()?.let { Result.success(it) }
+                val body = response.body()
+                Log.d("LOGIN/REPO", "HTTP body=$body")
+                body?.let { Result.success(it) }
                     ?: Result.failure(Exception("پاسخ خالی"))
-            } else {
-                Result.failure(Exception("خطا: ${response.message()}"))
+            }else {
+                val err = response.errorBody()?.string()
+                Log.e("LOGIN/REPO", "HTTP ERROR ${response.code()} | ${response.message()} | body=$err") // LOG
+                Result.failure(Exception("HTTP ${response.code()} - ${response.message()} - $err"))
             }
         } catch (e: Exception) {
-
+            Log.e("LOGIN/REPO", "EXCEPTION -> ${e.message}", e)
             Result.failure(Exception("خطا در اتصال: ${e.message}"))
         }
     }
@@ -63,7 +81,6 @@ class LoginApiRepository @Inject constructor(
                 deviceId = DeviceInfo.getDeviceID(context),
                 publicId = DeviceInfo.getPublicKey(context)
             )
-
             if (response.isSuccessful) {
                 response.body()?.let { Result.success(it) }
                     ?: Result.failure(Exception("پاسخ خالی"))

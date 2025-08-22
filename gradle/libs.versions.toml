@@ -22,6 +22,7 @@ identityCredential = "20231002"
 
 
 
+
 [libraries]
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
@@ -49,6 +50,7 @@ androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtim
 support-annotations = { group = "com.android.support", name = "support-annotations", version.ref = "supportAnnotations" }
 androidx-navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "navigationUi" }
 identity-credential = { group = "com.android.identity", name = "identity-credential", version.ref = "identityCredential" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

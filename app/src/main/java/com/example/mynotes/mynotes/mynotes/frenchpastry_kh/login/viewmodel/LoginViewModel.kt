@@ -1,6 +1,7 @@
 package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.viewmodel
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.retrifit.LoginApiRepository
@@ -54,13 +55,20 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             _loading.emit(true)
             _errorMessage.emit(null)
+            Log.d("LOGIN/VM", "sending code | phone=$phone")
+
             val result = repository.sendCodePhones(phone, context)
             result.onSuccess { response: SendCodeData ->
+                Log.d(
+                    "LOGIN/VM",
+                    "sendCode SUCCESS -> success=${response.success}, msg=${response.message}, http=${response.http_code}, expireAt=${response.expire_at}, seconds=${response.seconds}"
+                )
                 _sendCode.emit(response)
                 if (response.success != 1) {
                     _errorMessage.emit(response.message)
                 }
             }.onFailure { exception ->
+                Log.e("LOGIN/VM", "sendCode FAILURE -> ${exception.message}", exception)
                 _errorMessage.emit(exception.message ?: "خطا در ارسال کد")
             }
             _loading.emit(false)

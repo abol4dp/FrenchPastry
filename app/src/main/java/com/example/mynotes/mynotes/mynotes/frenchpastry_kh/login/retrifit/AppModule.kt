@@ -13,7 +13,7 @@ import javax.inject.Singleton
 object AppModule {
 
 
-    private const val URL = "https://pastry.alirezaahmadi.info/api/v1/"
+    private const val URL = "https://pastry.alirezaahmadi.info/api/v1"
     var API_KEY = ""
 
     @Provides
