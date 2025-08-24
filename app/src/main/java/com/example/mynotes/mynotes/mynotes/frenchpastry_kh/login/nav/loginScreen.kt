@@ -19,6 +19,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,18 +39,26 @@ fun loginScreen(
     loginViewModel: LoginViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
-
     var phoneNumber by remember { mutableStateOf("") }
     var verificationCode by remember { mutableStateOf("") }
     val loading by loginViewModel.loading.collectAsState()
     val errorMessage by loginViewModel.errorMessage.collectAsState()
     val sendCodeResponse by loginViewModel.sendCode.collectAsState()
     val verifyCodeResponse by loginViewModel.verifyCode.collectAsState()
+    var code by remember { mutableStateOf("") }
 
 
 
+LaunchedEffect (verifyCodeResponse){
+    if (verifyCodeResponse.success == 1){
+        Toast.makeText(context, "موفقیت امیز", Toast.LENGTH_SHORT).show()
+
+    }else if (verifyCodeResponse.success == 0&& verifyCodeResponse.message.isNotEmpty()){
+        Toast.makeText(context, "کد اشتباه است", Toast.LENGTH_SHORT).show()
+    }
 
 
+}
 
 
 
@@ -109,10 +118,10 @@ fun loginScreen(
                 color = MaterialTheme.colorScheme.error
             )
         }
-
+//
         OutlinedTextField(
-            value = "",
-            onValueChange = {},
+            value =code ,
+            onValueChange = {code = it},
             label = { Text("کد ورود را وارد کنید") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
             modifier = Modifier.padding(bottom = 8.dp)
@@ -122,7 +131,18 @@ fun loginScreen(
         Button(
 
 
-            onClick = {},
+            onClick = {
+
+if (code.isNotEmpty()){
+    loginViewModel.verifyCode(code,phoneNumber,context)
+}
+                if (verifyCodeResponse.success ==1){
+                    Toast.makeText(context, "کد درست است", Toast.LENGTH_SHORT).show()
+                }else Toast.makeText(context, "کد را وارد کنید", Toast.LENGTH_SHORT).show()
+
+
+
+            },
             modifier = Modifier.width(95.dp)
         ) {
             Text("ورود")
