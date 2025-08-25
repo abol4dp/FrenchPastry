@@ -53,7 +53,7 @@ LaunchedEffect (verifyCodeResponse){
     if (verifyCodeResponse.success == 1){
         Toast.makeText(context, "موفقیت امیز", Toast.LENGTH_SHORT).show()
 
-    }else if (verifyCodeResponse.success == 0&& verifyCodeResponse.message.isNotEmpty()){
+    }else if (verifyCodeResponse.success == 0){
         Toast.makeText(context, "کد اشتباه است", Toast.LENGTH_SHORT).show()
     }
 
@@ -136,10 +136,6 @@ LaunchedEffect (verifyCodeResponse){
 if (code.isNotEmpty()){
     loginViewModel.verifyCode(code,phoneNumber,context)
 }
-                if (verifyCodeResponse.success ==1){
-                    Toast.makeText(context, "کد درست است", Toast.LENGTH_SHORT).show()
-                }else Toast.makeText(context, "کد را وارد کنید", Toast.LENGTH_SHORT).show()
-
 
 
             },

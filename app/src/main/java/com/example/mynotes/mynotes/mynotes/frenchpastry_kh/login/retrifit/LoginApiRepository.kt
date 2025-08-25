@@ -7,6 +7,7 @@ import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.ext.DeviceInfo
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.SendCodeData
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.VerifyCodeData
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.homemodel.HomeResponse
+import com.google.gson.Gson
 import kotlinx.coroutines.flow.MutableStateFlow
 import java.security.PublicKey
 import javax.inject.Inject
@@ -85,8 +86,19 @@ class LoginApiRepository @Inject constructor(
                 response.body()?.let { Result.success(it) }
                     ?: Result.failure(Exception("پاسخ خالی"))
             } else {
-                Result.failure(Exception("خطا: ${response.message()}"))
+
+                val errorBody = response.errorBody()?.string()
+                val gson = Gson()
+                val errorResponse = try {
+                    gson.fromJson(errorBody, VerifyCodeData::class.java)
+                } catch (e: Exception) {
+                    VerifyCodeData(success = 0, message = "خطای ناشناخته از سرور")
+                }
+                Result.success(errorResponse) // ✅ میره به UI
+
             }
+
+
         } catch (e: Exception) {
 
             Result.failure(Exception("خطا در اتصال: ${e.message}"))

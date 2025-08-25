@@ -89,13 +89,13 @@ class LoginViewModel @Inject constructor(
             result.onSuccess { response: VerifyCodeData ->
                 _verifyCode.emit(response)
                 if (response.success != 1) {
-                    _errorMessage.emit(response.message)
+
 
                 }
 
 
             }.onFailure { exception ->
-                _errorMessage.emit(exception.message ?: "خطا در تایید کد")
+
 
             }
             _loading.emit(false)
