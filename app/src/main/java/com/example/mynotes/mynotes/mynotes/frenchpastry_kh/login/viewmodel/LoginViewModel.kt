@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+enum class VerifyStatus { Idle, Success, Failure }
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
@@ -36,12 +37,19 @@ class LoginViewModel @Inject constructor(
     private val _verifyCode = MutableStateFlow<VerifyCodeData>(VerifyCodeData())
     val verifyCode: StateFlow<VerifyCodeData> = _verifyCode.asStateFlow()
 
-    private val _loading = MutableStateFlow(false)
-    val loading: StateFlow<Boolean> = _loading.asStateFlow()
+    private val _loadingver = MutableStateFlow(false)
+    val loadingver: StateFlow<Boolean> = _loadingver.asStateFlow()
+
+   private val _loadingsen= MutableStateFlow(false)
+    val loadingsen: StateFlow<Boolean> = _loadingsen.asStateFlow()
 
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
 
+    private val _verifyStatus = MutableStateFlow(VerifyStatus.Idle)
+    val verifyStatus: StateFlow<VerifyStatus> = _verifyStatus
+
+    enum class VerifyStatus { Idle, Success, Failure }
 
     fun getMain() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -50,10 +58,13 @@ class LoginViewModel @Inject constructor(
 
     }
 
+    fun resetVerifyStatus() {
+        _verifyStatus.value = VerifyStatus.Idle
+    }
 
     fun sendCodeNumber(phone: String, context: Context) {
         viewModelScope.launch {
-            _loading.emit(true)
+            _loadingsen.emit(true)
             _errorMessage.emit(null)
             Log.d("LOGIN/VM", "sending code | phone=$phone")
 
@@ -71,7 +82,7 @@ class LoginViewModel @Inject constructor(
                 Log.e("LOGIN/VM", "sendCode FAILURE -> ${exception.message}", exception)
                 _errorMessage.emit(exception.message ?: "خطا در ارسال کد")
             }
-            _loading.emit(false)
+            _loadingsen.emit(false)
 
 
         }
@@ -82,23 +93,24 @@ class LoginViewModel @Inject constructor(
 
     fun verifyCode(code: String, phone: String, context: Context) {
         viewModelScope.launch {
-            _loading.emit(true)
+            _loadingver.emit(true)
             _errorMessage.emit(null)
             val result = repository.verifyCode(code, phone, context)
 
-            result.onSuccess { response: VerifyCodeData ->
-                _verifyCode.emit(response)
-                if (response.success != 1) {
+            result.onSuccess { response ->
 
+                if (response.success == 1) {
+                    _verifyStatus.emit(VerifyStatus.Success)
 
-                }
+                }else
+                    _verifyStatus.emit(VerifyStatus.Failure)
 
 
             }.onFailure { exception ->
 
 
             }
-            _loading.emit(false)
+            _loadingver.emit(false)
 
 
         }
