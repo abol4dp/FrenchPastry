@@ -5,19 +5,15 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedIconToggleButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -31,11 +27,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.viewmodel.LoginViewModel
 
 
 @Composable
 fun loginScreen(
+    navController: NavHostController,
     loginViewModel: LoginViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
@@ -51,8 +49,7 @@ fun loginScreen(
 
 LaunchedEffect (verifyCodeResponse){
     if (verifyCodeResponse.success == 1){
-        Toast.makeText(context, "موفقیت امیز", Toast.LENGTH_SHORT).show()
-
+        Toast.makeText(context, "کد درست  است", Toast.LENGTH_SHORT).show()
     }else if (verifyCodeResponse.success == 0){
         Toast.makeText(context, "کد اشتباه است", Toast.LENGTH_SHORT).show()
     }
