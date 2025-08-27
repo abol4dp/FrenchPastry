@@ -38,14 +38,9 @@ fun loginScreen(
 ) {
     val context = LocalContext.current
     var phoneNumber by remember { mutableStateOf("") }
-    var verificationCode by remember { mutableStateOf("") }
-    val loadingver by loginViewModel.loadingver.collectAsState()
     val loadingsen by loginViewModel.loadingsen.collectAsState()
     val errorMessage by loginViewModel.errorMessage.collectAsState()
-    val sendCodeResponse by loginViewModel.sendCode.collectAsState()
-    val verifyCodeResponse by loginViewModel.verifyCode.collectAsState()
     var code by remember { mutableStateOf("") }
-    var isVerifyClicked by remember { mutableStateOf(false) }
     val verifyStatus by loginViewModel.verifyStatus.collectAsState()
 
 
@@ -55,16 +50,17 @@ fun loginScreen(
 
     LaunchedEffect(verifyStatus) {
         when (verifyStatus) {
-            LoginViewModel.VerifyStatus.Success ->{
+            LoginViewModel.VerifyStatus.Success -> {
                 navController.navigate("homescreen")
                 loginViewModel.resetVerifyStatus()
             }
 
-            LoginViewModel.VerifyStatus.Failure -> {Toast.makeText(
-                context,
-                "کد اشتباه است",
-                Toast.LENGTH_SHORT
-            ).show()
+            LoginViewModel.VerifyStatus.Failure -> {
+                Toast.makeText(
+                    context,
+                    "کد اشتباه است",
+                    Toast.LENGTH_SHORT
+                ).show()
                 loginViewModel.resetVerifyStatus()
 
             }
@@ -136,7 +132,7 @@ fun loginScreen(
                 color = MaterialTheme.colorScheme.error
             )
         }
-//
+
         OutlinedTextField(
             value = code,
             onValueChange = { code = it },

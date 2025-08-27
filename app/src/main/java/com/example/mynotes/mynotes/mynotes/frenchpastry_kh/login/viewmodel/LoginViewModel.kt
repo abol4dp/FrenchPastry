@@ -40,7 +40,7 @@ class LoginViewModel @Inject constructor(
     private val _loadingver = MutableStateFlow(false)
     val loadingver: StateFlow<Boolean> = _loadingver.asStateFlow()
 
-   private val _loadingsen= MutableStateFlow(false)
+    private val _loadingsen = MutableStateFlow(false)
     val loadingsen: StateFlow<Boolean> = _loadingsen.asStateFlow()
 
     private val _errorMessage = MutableStateFlow<String?>(null)
@@ -102,7 +102,7 @@ class LoginViewModel @Inject constructor(
                 if (response.success == 1) {
                     _verifyStatus.emit(VerifyStatus.Success)
 
-                }else
+                } else
                     _verifyStatus.emit(VerifyStatus.Failure)
 
 

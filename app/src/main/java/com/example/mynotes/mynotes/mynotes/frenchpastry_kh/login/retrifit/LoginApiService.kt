@@ -16,25 +16,22 @@ interface LoginApiService {
     suspend fun getMain(): Response<HomeResponse>
 
 
-
     @FormUrlEncoded
     @POST("v1/auth/phone/login")
     suspend fun sendCodePhone(
-        @Header("app-device-uid")deviceId:String,
-        @Header("app-public-key")publicId:String,
-        @Field("phone") phone:String
-    ):Response<SendCodeData>
-
-
+        @Header("app-device-uid") deviceId: String,
+        @Header("app-public-key") publicId: String,
+        @Field("phone") phone: String
+    ): Response<SendCodeData>
 
 
     @FormUrlEncoded
     @POST("v1/auth/phone/login/verify")
     suspend fun verifyCode(
-        @Header("app-device-uid")deviceId:String,
-        @Header("app-public-key")publicId:String,
-        @Field("code") code:String,
-        @Field("phone") phone:String,
-    ):Response<VerifyCodeData>
+        @Header("app-device-uid") deviceId: String,
+        @Header("app-public-key") publicId: String,
+        @Field("code") code: String,
+        @Field("phone") phone: String,
+    ): Response<VerifyCodeData>
 
 }
