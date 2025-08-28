@@ -1,4 +1,4 @@
-package com.example.mynotes.mynotes.mynotes.frenchpastry_kh. login.nav
+package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.nav
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -7,12 +7,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Phone
-
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,9 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.unit.dp
 
@@ -67,11 +63,12 @@ fun MyEditText(
                     )
                 }
 
-            }
-            else {
-                Icon(Icons.Filled.Phone,
+            } else {
+                Icon(
+                    Icons.Filled.Phone,
                     contentDescription = "",
-                    tint = Color.Black)
+                    tint = Color.Black
+                )
             }
         },
         onValueChange = { onValueChange(it) },
