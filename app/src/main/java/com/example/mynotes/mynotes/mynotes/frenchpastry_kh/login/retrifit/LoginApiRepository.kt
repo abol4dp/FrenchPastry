@@ -13,10 +13,10 @@ import java.security.PublicKey
 import javax.inject.Inject
 
 class LoginApiRepository @Inject constructor(
-    private val apiService: LoginApiService
+    private val apiService: LoginApiService,
 
 ) {
-
+    val errorVerifyCode =MutableStateFlow(false)
 
     suspend fun getMain(): Result<HomeResponse> {
         return try {

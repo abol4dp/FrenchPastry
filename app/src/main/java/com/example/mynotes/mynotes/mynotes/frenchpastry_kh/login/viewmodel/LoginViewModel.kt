@@ -2,6 +2,9 @@ package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.viewmodel
 
 import android.content.Context
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.retrifit.LoginApiRepository
@@ -48,6 +51,12 @@ class LoginViewModel @Inject constructor(
 
     private val _verifyStatus = MutableStateFlow(VerifyStatus.Idle)
     val verifyStatus: StateFlow<VerifyStatus> = _verifyStatus
+
+  val _loadingsenAlert = MutableStateFlow(false)
+    val loadingAlert: StateFlow<Boolean> = _loadingsenAlert.asStateFlow()
+
+    val errorVerifyCode = repository.errorVerifyCode
+
 
     enum class VerifyStatus { Idle, Success, Failure }
 
