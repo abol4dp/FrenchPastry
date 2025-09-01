@@ -19,7 +19,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-enum class VerifyStatus { Idle, Success, Failure }
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
@@ -32,6 +31,7 @@ class LoginViewModel @Inject constructor(
     private val _mainResponse = MutableStateFlow<HomeResponse>(HomeResponse())
     val mainResponse: StateFlow<HomeResponse> = _mainResponse.asStateFlow()
 
+    var userCode by mutableStateOf("  ")
 
     private val _sendCode = MutableStateFlow<SendCodeData>(SendCodeData())
     val sendCode: StateFlow<SendCodeData> = _sendCode.asStateFlow()
@@ -52,13 +52,19 @@ class LoginViewModel @Inject constructor(
     private val _verifyStatus = MutableStateFlow(VerifyStatus.Idle)
     val verifyStatus: StateFlow<VerifyStatus> = _verifyStatus
 
-  val _loadingsenAlert = MutableStateFlow(false)
+
+    val _loadingsenAlert = MutableStateFlow(false)
     val loadingAlert: StateFlow<Boolean> = _loadingsenAlert.asStateFlow()
 
     val errorVerifyCode = repository.errorVerifyCode
+    var userPhone by mutableStateOf("")
+
+    private val _sendCodeStatus = MutableStateFlow(SendCodeStatus.Idle)
+    val sendCodeStatus: StateFlow<SendCodeStatus> = _sendCodeStatus
 
 
     enum class VerifyStatus { Idle, Success, Failure }
+    enum class SendCodeStatus { Idle, Success, Failure }
 
     fun getMain() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -71,8 +77,10 @@ class LoginViewModel @Inject constructor(
         _verifyStatus.value = VerifyStatus.Idle
     }
 
+
     fun sendCodeNumber(phone: String, context: Context) {
         viewModelScope.launch {
+            userPhone = phone
             _loadingsen.emit(true)
             _errorMessage.emit(null)
             Log.d("LOGIN/VM", "sending code | phone=$phone")
@@ -83,13 +91,15 @@ class LoginViewModel @Inject constructor(
                     "LOGIN/VM",
                     "sendCode SUCCESS -> success=${response.success}, msg=${response.message}, http=${response.http_code}, expireAt=${response.expire_at}, seconds=${response.seconds}"
                 )
-                _sendCode.emit(response)
-                if (response.success != 1) {
-                    _errorMessage.emit(response.message)
-                }
-            }.onFailure { exception ->
-                Log.e("LOGIN/VM", "sendCode FAILURE -> ${exception.message}", exception)
-                _errorMessage.emit(exception.message ?: "خطا در ارسال کد")
+
+                if (response.success == 1) {
+                    _sendCodeStatus.emit(SendCodeStatus.Success)
+                } else
+                    _sendCodeStatus.emit(SendCodeStatus.Failure)
+
+            }.onFailure {
+
+
             }
             _loadingsen.emit(false)
 
@@ -100,11 +110,11 @@ class LoginViewModel @Inject constructor(
     }
 
 
-    fun verifyCode(code: String, phone: String, context: Context) {
+    fun verifyCode(context: Context) {
         viewModelScope.launch {
             _loadingver.emit(true)
             _errorMessage.emit(null)
-            val result = repository.verifyCode(code, phone, context)
+            val result = repository.verifyCode(code = userCode, phone = userPhone, context)
 
             result.onSuccess { response ->
 

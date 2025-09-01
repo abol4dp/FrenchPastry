@@ -4,9 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
-import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.nav.loginScreen
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.viewmodel.LoginViewModel
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.navcomponent.NavController
 import dagger.hilt.android.AndroidEntryPoint

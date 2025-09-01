@@ -33,11 +33,11 @@ fun AlertEnterCode(
 ) {
     if (steepLogin.intValue == 2) {
         val context = LocalContext.current
-        val loading by remember { mutableStateOf(false) }
+        val loading by loginViewModel.loadingver.collectAsState()
         val verifyStatus by loginViewModel.verifyStatus.collectAsState()
         var code by remember { mutableStateOf("") }
         val errorVerifyCode by loginViewModel.errorVerifyCode.collectAsState()
-        var phoneNumber by remember { mutableStateOf("") }
+
 
         LaunchedEffect(verifyStatus) {
             when (verifyStatus) {
@@ -122,31 +122,26 @@ fun AlertEnterCode(
                     ){
 
                         //تایید کد
-                       Button(
-                           shape = RoundedCornerShape(9.dp),
-                           colors = ButtonDefaults.buttonColors(
-                               containerColor = Color.Black,
-                               contentColor = Color.White
+                        Button(
+                            onClick = {
 
-                       ),        modifier = Modifier
-                               .fillMaxWidth()
-                               .height(43.dp)
-                               .padding(vertical = 3.dp),
-                           onClick = {
-                               if (code.isNotEmpty()) {
-                                   loginViewModel.verifyCode(code, phoneNumber, context)
-                               }
+                                    loginViewModel.verifyCode(context)
 
-                           }
+                                    Toast.makeText(context, "شماره یا کد خالی است", Toast.LENGTH_SHORT).show()
 
-                               )   {
+                            }
+                        ) {
+                            if (loading) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(20.dp),
+                                    color = Color.White,
+                                    strokeWidth = 2.dp
+                                )
+                            } else {
+                                Text("تأیید و ادامه", color = Color.White)
+                            }
+                        }
 
-                           Text(
-                               text = " تائید و ادامه",
-                               color = Color.White,
-                           )
-
-                           }
 
 
                         // ویرایش باتن
