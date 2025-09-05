@@ -13,7 +13,7 @@ package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.nav
  *     val context = LocalContext.current
  *     var phoneNumber by remember { mutableStateOf("") }
  *     val loadingsen by loginViewModel.loadingsen.collectAsState()
- *     val errorMessage by loginViewModel.errorMessage.collectAsState()
+      val errorMessage by loginViewModel.errorMessage.collectAsState()
  *     var code by remember { mutableStateOf("") }
  *     val verifyStatus by loginViewModel.verifyStatus.collectAsState()
  *

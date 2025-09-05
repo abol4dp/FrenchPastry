@@ -1,7 +1,6 @@
 package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.retrifit
 
 import android.content.Context
-import android.devicelock.DeviceId
 import android.util.Log
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.ext.DeviceInfo
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.SendCodeData
@@ -9,7 +8,6 @@ import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.VerifyCodeData
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.homemodel.HomeResponse
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.MutableStateFlow
-import java.security.PublicKey
 import javax.inject.Inject
 
 class LoginApiRepository @Inject constructor(

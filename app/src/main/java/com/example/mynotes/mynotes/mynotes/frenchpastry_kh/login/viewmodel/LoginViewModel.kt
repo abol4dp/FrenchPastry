@@ -31,7 +31,6 @@ class LoginViewModel @Inject constructor(
     private val _mainResponse = MutableStateFlow<HomeResponse>(HomeResponse())
     val mainResponse: StateFlow<HomeResponse> = _mainResponse.asStateFlow()
 
-    var userCode by mutableStateOf("  ")
 
     private val _sendCode = MutableStateFlow<SendCodeData>(SendCodeData())
     val sendCode: StateFlow<SendCodeData> = _sendCode.asStateFlow()
@@ -57,7 +56,7 @@ class LoginViewModel @Inject constructor(
     val loadingAlert: StateFlow<Boolean> = _loadingsenAlert.asStateFlow()
 
     val errorVerifyCode = repository.errorVerifyCode
-    var userPhone by mutableStateOf("")
+    var userPhone by mutableStateOf("  ")
 
     private val _sendCodeStatus = MutableStateFlow(SendCodeStatus.Idle)
     val sendCodeStatus: StateFlow<SendCodeStatus> = _sendCodeStatus
@@ -109,33 +108,35 @@ class LoginViewModel @Inject constructor(
 
     }
 
-
-    fun verifyCode(context: Context) {
+    fun verifyCode(code: String, phone: String, context: Context) {
         viewModelScope.launch {
             _loadingver.emit(true)
             _errorMessage.emit(null)
-            val result = repository.verifyCode(code = userCode, phone = userPhone, context)
+
+            Log.d("LOGIN/VM", "verifyCode() called | code=$code | phone=$phone")
+
+            val result = repository.verifyCode(code, phone, context)
 
             result.onSuccess { response ->
+                Log.d("LOGIN/VM", "verifyCode() success | response=$response | response.success=${response.success}")
 
                 if (response.success == 1) {
                     _verifyStatus.emit(VerifyStatus.Success)
-
-                } else
+                    Log.d("LOGIN/VM", "verifyCode -> Success")
+                } else {
                     _verifyStatus.emit(VerifyStatus.Failure)
-
+                    Log.e("LOGIN/VM", "verifyCode -> Failure (server returned success=${response.success})")
+                }
 
             }.onFailure { exception ->
-
-
+                Log.e("LOGIN/VM", "verifyCode() exception: ${exception.message}", exception)
+                _verifyStatus.emit(VerifyStatus.Failure)
             }
+
             _loadingver.emit(false)
-
-
         }
-
-
     }
+
 
 }
 
