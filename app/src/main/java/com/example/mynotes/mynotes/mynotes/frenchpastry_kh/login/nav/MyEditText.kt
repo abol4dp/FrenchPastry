@@ -58,7 +58,6 @@ fun MyEditText(
                         modifier = Modifier
                             .align(Alignment.Center),
                         text = timer,
-                        style = MaterialTheme.typography.displayMedium,
                         color = Color.Black
                     )
                 }
@@ -84,7 +83,6 @@ fun MyEditText(
         placeholder = {
             Text(
                 text = placeholder,
-                style = MaterialTheme.typography.displayMedium,
                 color = Color.DarkGray
             )
 

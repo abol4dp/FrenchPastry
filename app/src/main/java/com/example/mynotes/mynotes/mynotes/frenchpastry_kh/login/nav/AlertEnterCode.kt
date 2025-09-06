@@ -3,15 +3,20 @@
 package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.nav
 
 import android.widget.Toast
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -40,8 +45,6 @@ import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.R
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.viewmodel.LoginViewModel
 
 
-
-
 @Composable
 fun AlertEnterCode(
     time: Int,
@@ -63,10 +66,12 @@ fun AlertEnterCode(
                 loginViewModel.resetVerifyStatus()
                 onDismiss()
             }
+
             LoginViewModel.VerifyStatus.Failure -> {
                 Toast.makeText(context, "کد اشتباه است", Toast.LENGTH_SHORT).show()
                 loginViewModel.resetVerifyStatus()
             }
+
             LoginViewModel.VerifyStatus.Idle -> Unit
         }
     }
@@ -88,7 +93,7 @@ fun AlertEnterCode(
                     Icon(
                         painter = painterResource(id = R.drawable.close),
                         contentDescription = "",
-                        modifier = Modifier.size(25.dp), // *** اصلاح خطای سینتکس (حذف modifier تکراری)
+                        modifier = Modifier.size(25.dp),
                         tint = Color.Black
                     )
                 }
@@ -134,8 +139,16 @@ fun AlertEnterCode(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Button(
+                        shape = RoundedCornerShape(9.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Black,
+                            contentColor = Color.White
+                        ), modifier = Modifier
+                            .fillMaxWidth()
+                            .height(43.dp)
+                            .padding(vertical = 3.dp),
                         onClick = {
-                            if (code.isNotEmpty() && phoneNumber.isNotEmpty()) { // *** بررسی phoneNumber
+                            if (code.isNotEmpty() && phoneNumber.isNotEmpty()) {
                                 loginViewModel.verifyCode(code, phoneNumber, context)
                             } else {
                                 Toast.makeText(
@@ -155,6 +168,20 @@ fun AlertEnterCode(
                         } else {
                             Text("تأیید و ادامه", color = Color.White)
                         }
+                    }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 4.dp),
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            modifier = Modifier.clickable { onDismiss() },
+                            text = "ویرایش شماره",
+                            color = Color.Black,
+
+                            )
                     }
                 }
             }
