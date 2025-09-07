@@ -49,26 +49,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-
 @Composable
 fun LoginScreen(
     navController: NavHostController,
     loginViewModel: LoginViewModel = hiltViewModel()
 ) {
-    val imgUr = listOf(
-        "https://raw.githubusercontent.com/ihoseinam/video-shop/main/pastry/head_login.png",
-        "https://raw.githubusercontent.com/ihoseinam/video-shop/main/pastry/logo_login.png",
-    )
-
     val context = LocalContext.current
 
     val loadingsen by loginViewModel.loadingsen.collectAsState()
     val errorMessage by loginViewModel.errorMessage.collectAsState()
-    var timeLeft by remember { mutableIntStateOf(150) }
     var phoneNumber by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
-    var error by remember { mutableStateOf(false) }
-    var isTimerRunning by remember { mutableStateOf(false) }
+    val error by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -93,16 +85,18 @@ fun LoginScreen(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(bottom = 10.dp),
-                contentAlignment = Alignment.BottomStart
+                    .padding(bottom = 7.dp)
+                    .padding(end = 35.dp),
+                contentAlignment = Alignment.BottomEnd
             ) {
                 Text(
-                    modifier = Modifier.padding(start = 13.dp),
+                    modifier = Modifier.fillMaxWidth(),
                     text = "ورود به برنامه",
                     fontSize = 20.sp,
                     lineHeight = 30.sp,
                     color = Color.Black,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Right
                 )
             }
         }
@@ -111,15 +105,18 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 8.dp)
+                .padding(end = 20.dp)
                 .weight(0.45f),
+            horizontalAlignment = Alignment.End
         ) {
             Spacer(modifier = Modifier.height(5.dp))
             Text(
                 text = "شیرینی فرانسوی",
                 fontWeight = FontWeight.Black,
                 color = Color.Black,
-                fontSize = 30.sp,
-                lineHeight = 45.sp,
+                fontSize = 28.sp,
+                lineHeight = 40.sp,
+                textAlign = TextAlign.Right,
             )
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -135,7 +132,7 @@ fun LoginScreen(
                 Text(
                     modifier = Modifier.padding(6.dp),
                     text = "فرمت شماره تلفن وارد شده صحیح نمی باشد",
-                    textAlign = TextAlign.Start,
+                    textAlign = TextAlign.End,
                     color = Color.Red,
                     fontWeight = FontWeight.Bold
                 )
@@ -143,26 +140,7 @@ fun LoginScreen(
                 Spacer(modifier = Modifier.padding(6.dp))
             }
 
-            LaunchedEffect(isTimerRunning) {
-                if (isTimerRunning) {
-                    while (timeLeft > 0 && isTimerRunning) {
-                        delay(1000)
-                        timeLeft--
-                    }
-                    isTimerRunning = false
-                }
-            }
-
-            if (isTimerRunning) {
-                Text(
-                    modifier = Modifier.padding(4.dp),
-                    text = "${"(${PastryHelper.pastryByLocate(formatTime(timeLeft))})"} تا درخواست مجدد کد",
-                    color = Color.Red,
-                )
-            }
-
             Button(
-                enabled = !isTimerRunning,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Black,
                     contentColor = Color.White
@@ -170,7 +148,8 @@ fun LoginScreen(
                 modifier = Modifier
                     .width(210.dp)
                     .height(45.dp)
-                    .padding(vertical = 2.dp),
+                    .padding(vertical = 2.dp)
+                    .padding(end = 7.dp),
                 shape = RoundedCornerShape(8.dp),
                 onClick = {
                     if (isValidPhoneNumber(phoneNumber)) {
@@ -196,8 +175,8 @@ fun LoginScreen(
                 }
             ) {
                 Text(
-                    if (loadingsen) "...درحال ارسال کد "
-                    else "ارسال کد"
+                    if (loadingsen) "... درحال ارسال کد "
+                    else "ارسال کد به شماره موبایل من"
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -205,12 +184,12 @@ fun LoginScreen(
                 if (errorMessage != null) {
                     Text(
                         text = errorMessage ?: "",
-                        color = MaterialTheme.colorScheme.error
+                        color = MaterialTheme.colorScheme.error,
+                        textAlign = TextAlign.Right
                     )
                 }
                 if (showDialog) {
                     AlertEnterCode(
-                        time = 120,
                         navController = navController,
                         loginViewModel = loginViewModel,
                         phoneNumber = phoneNumber,
@@ -224,11 +203,4 @@ fun LoginScreen(
 
 fun isValidPhoneNumber(phone: String): Boolean {
     return phone.length == 11 && phone.startsWith("0")
-}
-
-@SuppressLint("DefaultLocale")
-fun formatTime(seconds: Int): String {
-    val minutes = seconds / 60
-    val remainingSeconds = seconds % 60
-    return String.format("%d:%02d", minutes, remainingSeconds)
 }

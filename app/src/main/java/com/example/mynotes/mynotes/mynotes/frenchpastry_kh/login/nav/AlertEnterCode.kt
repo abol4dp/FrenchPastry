@@ -47,7 +47,6 @@ import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.viewmodel.Login
 
 @Composable
 fun AlertEnterCode(
-    time: Int,
     navController: NavHostController,
     loginViewModel: LoginViewModel = hiltViewModel(),
     phoneNumber: String,
@@ -102,23 +101,24 @@ fun AlertEnterCode(
                     style = MaterialTheme.typography.displayMedium,
                     fontWeight = FontWeight.Black,
                     color = Color.Black,
-                    textAlign = TextAlign.Start,
+                    textAlign = TextAlign.End,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
         },
         text = {
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 14.dp)
+
             ) {
                 Spacer(modifier = Modifier.height(10.dp))
                 MyEditText(
                     value = code,
                     placeholder = "کد تأیید را وارد کنید",
                     onValueChange = { code = it },
-                    timer = time.toString(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     onError = errorVerifyCode
                 )
@@ -172,16 +172,16 @@ fun AlertEnterCode(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 4.dp),
-                        horizontalArrangement = Arrangement.Start,
+                            .padding(top = 4.dp)
+                            .padding(end = 10.dp),
+                        horizontalArrangement = Arrangement.End,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
                             modifier = Modifier.clickable { onDismiss() },
                             text = "ویرایش شماره",
-                            color = Color.Black,
-
-                            )
+                            color = Color.Black
+                        )
                     }
                 }
             }

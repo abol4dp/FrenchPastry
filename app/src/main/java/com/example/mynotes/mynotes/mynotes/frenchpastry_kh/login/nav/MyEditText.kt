@@ -22,60 +22,45 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDirection
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
 
 @Composable
+
+
 fun MyEditText(
     value: String,
     placeholder: String,
     onValueChange: (it: String) -> Unit,
-    timer: String = "",
     keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
     onError: Boolean = false,
 ) {
-
     TextField(
         modifier = Modifier
             .width(250.dp)
-            .height(47.dp)
+            .height(52.dp)
             .border(0.9.dp, Color.LightGray, RoundedCornerShape(10.dp))
             .clip(RoundedCornerShape(10.dp)),
         value = value,
         isError = onError,
         singleLine = true,
-        trailingIcon = {
-            if (timer.isNotEmpty()) {
-                Box(
-                    modifier = Modifier
-                        .padding(4.dp)
-                        .clip(RoundedCornerShape(10.dp))
-                        .background(Color.LightGray.copy(0.25f))
-                        .size(50.dp, 32.dp)
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .align(Alignment.Center),
-                        text = timer,
-                        color = Color.Black
-                    )
-                }
 
-            } else {
-                Icon(
-                    Icons.Filled.Phone,
-                    contentDescription = "",
-                    tint = Color.Black
-                )
-            }
+        leadingIcon = {
+            Icon(
+                Icons.Filled.Phone,
+                contentDescription = "phone icon",
+                tint = Color.Black
+            )
         },
         onValueChange = { onValueChange(it) },
         colors = TextFieldDefaults.colors(
             focusedContainerColor = Color.White,
             unfocusedContainerColor = Color.White,
             cursorColor = Color.DarkGray,
-            focusedIndicatorColor = Color.White,
+            focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             errorTextColor = Color.Red
         ),
@@ -83,14 +68,15 @@ fun MyEditText(
         placeholder = {
             Text(
                 text = placeholder,
-                color = Color.DarkGray
+                color = Color.DarkGray,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                     textAlign = TextAlign.Right
             )
-
         },
         textStyle = MaterialTheme.typography.bodyMedium.copy(
-            textDirection = TextDirection.Ltr,
+            textAlign = TextAlign.Start,
+            textDirection = TextDirection.Content
         ),
-
-        )
-
+    )
 }
