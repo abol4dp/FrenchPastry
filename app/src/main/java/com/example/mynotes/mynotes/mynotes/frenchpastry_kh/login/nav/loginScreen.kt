@@ -28,6 +28,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.traceEventEnd
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,6 +41,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.navigation.NavHostController
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.R
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.ext.PastryHelper
@@ -49,6 +51,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+
 @Composable
 fun LoginScreen(
     navController: NavHostController,
@@ -60,7 +63,7 @@ fun LoginScreen(
     val errorMessage by loginViewModel.errorMessage.collectAsState()
     var phoneNumber by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
-    val error by remember { mutableStateOf(false) }
+    var error by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -123,22 +126,17 @@ fun LoginScreen(
             MyEditText(
                 value = phoneNumber,
                 placeholder = "شماره موبایل خود را وارد کنید",
-                onValueChange = { phoneNumber = it },
+                onValueChange = {
+                    phoneNumber = it
+                    error = false
+                },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                 onError = error
             )
 
-            if (error) {
-                Text(
-                    modifier = Modifier.padding(6.dp),
-                    text = "فرمت شماره تلفن وارد شده صحیح نمی باشد",
-                    textAlign = TextAlign.End,
-                    color = Color.Red,
-                    fontWeight = FontWeight.Bold
-                )
-            } else {
+
                 Spacer(modifier = Modifier.padding(6.dp))
-            }
+
 
             Button(
                 colors = ButtonDefaults.buttonColors(
@@ -171,6 +169,10 @@ fun LoginScreen(
                                 }
                             }
                         }
+                    } else if (phoneNumber.isEmpty()) {
+                        Toast.makeText(context, "شماره موبایل خود را وارد کنید", Toast.LENGTH_LONG).show()
+                    } else {
+                        error = true
                     }
                 }
             ) {

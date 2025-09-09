@@ -38,12 +38,22 @@ fun MyEditText(
     keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
     onError: Boolean = false,
 ) {
+
+    val borderColor = if (onError) Color.Red else Color.LightGray
+    val PlaceholderColor = if (onError) Color.Red else Color.DarkGray
+
+
     TextField(
-        modifier = Modifier
-            .width(250.dp)
-            .height(52.dp)
-            .border(0.9.dp, Color.LightGray, RoundedCornerShape(10.dp))
-            .clip(RoundedCornerShape(10.dp)),
+        modifier = Modifier.run {
+            width(250.dp)
+                .height(52.dp)
+                .border(
+                    0.9.dp,
+                    color = borderColor,
+                    RoundedCornerShape(10.dp)
+                )
+                .clip(RoundedCornerShape(10.dp))
+        },
         value = value,
         isError = onError,
         singleLine = true,
@@ -62,16 +72,17 @@ fun MyEditText(
             cursorColor = Color.DarkGray,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
-            errorTextColor = Color.Red
+            errorTextColor = Color.Red,
+            errorIndicatorColor = Color.Red
         ),
         keyboardOptions = keyboardOptions,
         placeholder = {
             Text(
                 text = placeholder,
-                color = Color.DarkGray,
+                color = PlaceholderColor,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                     textAlign = TextAlign.Right
+                textAlign = TextAlign.Right
             )
         },
         textStyle = MaterialTheme.typography.bodyMedium.copy(
@@ -79,4 +90,12 @@ fun MyEditText(
             textDirection = TextDirection.Content
         ),
     )
+    if (onError) {
+        Text(
+            text = "شماره موبایل معتبر وارد کنید", color = Color.Red,
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+
+        )
+    }
 }
