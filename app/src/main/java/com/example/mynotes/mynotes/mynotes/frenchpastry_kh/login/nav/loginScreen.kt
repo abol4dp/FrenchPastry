@@ -65,6 +65,21 @@ fun LoginScreen(
     var showDialog by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf(false) }
 
+    var timeLeft by remember { mutableStateOf(0) }
+    var isTimerRunning by remember { mutableStateOf(false) }
+
+
+    LaunchedEffect(isTimerRunning) {
+        if (isTimerRunning) {
+            while (timeLeft > 0) {
+                delay(1000)
+                timeLeft--
+            }
+            isTimerRunning = false
+        }
+
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -112,7 +127,7 @@ fun LoginScreen(
                 .weight(0.45f),
             horizontalAlignment = Alignment.End
         ) {
-            Spacer(modifier = Modifier.height(5.dp))
+            Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = "شیرینی فرانسوی",
                 fontWeight = FontWeight.Black,
@@ -133,12 +148,24 @@ fun LoginScreen(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                 onError = error
             )
+            if (isTimerRunning) {
+                Text(
+                    modifier = Modifier.padding(6.dp)
+                        .padding(end = 4.dp)
+                    ,
+                    text = "تاارسال مجدد کد ${formatTime(timeLeft)}",
+                    color = Color.Black,
+                    fontWeight = FontWeight.Bold
+                )
 
 
-                Spacer(modifier = Modifier.padding(6.dp))
+            }
+
+            Spacer(modifier = Modifier.padding(6.dp))
 
 
             Button(
+                enabled = !isTimerRunning,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Black,
                     contentColor = Color.White
@@ -151,6 +178,9 @@ fun LoginScreen(
                 shape = RoundedCornerShape(8.dp),
                 onClick = {
                     if (isValidPhoneNumber(phoneNumber)) {
+                        error = false
+                        timeLeft = 180
+                        isTimerRunning = true
                         CoroutineScope(Dispatchers.Main).launch {
                             loginViewModel.sendCodeNumber(phoneNumber, context)
 
@@ -170,7 +200,8 @@ fun LoginScreen(
                             }
                         }
                     } else if (phoneNumber.isEmpty()) {
-                        Toast.makeText(context, "شماره موبایل خود را وارد کنید", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, "شماره موبایل خود را وارد کنید", Toast.LENGTH_LONG)
+                            .show()
                     } else {
                         error = true
                     }
@@ -205,4 +236,10 @@ fun LoginScreen(
 
 fun isValidPhoneNumber(phone: String): Boolean {
     return phone.length == 11 && phone.startsWith("0")
+}
+
+fun formatTime(seconds: Int): String {
+    val minutes = seconds / 60
+    val secs = seconds % 60
+    return String.format("%02d:%02d", minutes, secs)
 }

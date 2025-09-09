@@ -76,7 +76,7 @@ fun AlertEnterCode(
     }
 
     AlertDialog(
-        onDismissRequest = { onDismiss() },
+        onDismissRequest = {  },
         confirmButton = {},
         dismissButton = {
             TextButton(onClick = { onDismiss() }) {
