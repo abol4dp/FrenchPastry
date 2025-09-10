@@ -3,6 +3,7 @@
 package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.nav
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -24,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -65,9 +67,22 @@ fun LoginScreen(
     var showDialog by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf(false) }
 
-    var timeLeft by remember { mutableStateOf(0) }
+    var timeLeft by remember { mutableIntStateOf(0) }
     var isTimerRunning by remember { mutableStateOf(false) }
 
+    val savedPhone by loginViewModel.getPhoneNumber().observeAsState()
+
+
+
+
+    LaunchedEffect(savedPhone) {
+        Log.d("HILT-COMPOSE", "Saved phone = $savedPhone")
+        if (!savedPhone.isNullOrEmpty()) {
+            navController.navigate("homescreen") {
+                popUpTo("loginscreen") { inclusive = true }
+            }
+        }
+    }
 
     LaunchedEffect(isTimerRunning) {
         if (isTimerRunning) {
@@ -97,12 +112,16 @@ fun LoginScreen(
                     .height(450.dp),
                 painter = painterResource(id = R.drawable.img_pastry_login),
                 contentDescription = "",
-                contentScale = ContentScale.FillBounds
-            )
 
+
+                contentScale = ContentScale.FillBounds
+
+
+            )
             Box(
                 modifier = Modifier
                     .fillMaxSize()
+
                     .padding(bottom = 7.dp)
                     .padding(end = 35.dp),
                 contentAlignment = Alignment.BottomEnd
@@ -150,9 +169,9 @@ fun LoginScreen(
             )
             if (isTimerRunning) {
                 Text(
-                    modifier = Modifier.padding(6.dp)
-                        .padding(end = 4.dp)
-                    ,
+                    modifier = Modifier
+                        .padding(6.dp)
+                        .padding(end = 4.dp),
                     text = "تاارسال مجدد کد ${formatTime(timeLeft)}",
                     color = Color.Black,
                     fontWeight = FontWeight.Bold
@@ -238,6 +257,7 @@ fun isValidPhoneNumber(phone: String): Boolean {
     return phone.length == 11 && phone.startsWith("0")
 }
 
+@SuppressLint("DefaultLocale")
 fun formatTime(seconds: Int): String {
     val minutes = seconds / 60
     val secs = seconds % 60

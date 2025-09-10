@@ -66,6 +66,11 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.androidx.navigation.ui)
     implementation(libs.hilt.navigation.compose)
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
+
+
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)

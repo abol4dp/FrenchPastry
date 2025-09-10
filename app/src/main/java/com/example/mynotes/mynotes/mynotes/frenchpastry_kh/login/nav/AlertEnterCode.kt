@@ -58,10 +58,19 @@ fun AlertEnterCode(
     var code by remember { mutableStateOf("") }
     val errorVerifyCode by loginViewModel.errorVerifyCode.collectAsState()
 
+
+
+
+
+
+
     LaunchedEffect(verifyStatus) {
         when (verifyStatus) {
             LoginViewModel.VerifyStatus.Success -> {
-                navController.navigate("homescreen")
+                loginViewModel.savePhone(phoneNumber)
+                navController.navigate("homescreen"){
+                    popUpTo("loginScreen" ) {inclusive = true}
+                }
                 loginViewModel.resetVerifyStatus()
                 onDismiss()
             }
@@ -76,7 +85,7 @@ fun AlertEnterCode(
     }
 
     AlertDialog(
-        onDismissRequest = {  },
+        onDismissRequest = {},
         confirmButton = {},
         dismissButton = {
             TextButton(onClick = { onDismiss() }) {

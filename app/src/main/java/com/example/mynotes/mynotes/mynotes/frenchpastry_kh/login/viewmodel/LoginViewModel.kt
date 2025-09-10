@@ -1,12 +1,16 @@
 package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.viewmodel
 
 import android.content.Context
+import android.provider.ContactsContract.CommonDataKinds.Phone
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.db.LocalRoomRepository
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.retrifit.LoginApiRepository
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.SendCodeData
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.VerifyCodeData
@@ -23,8 +27,8 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
 
-    private val repository: LoginApiRepository
-
+    private val repository: LoginApiRepository,
+    private val localRepository: LocalRoomRepository
 ) : ViewModel() {
 
 
@@ -118,14 +122,20 @@ class LoginViewModel @Inject constructor(
             val result = repository.verifyCode(code, phone, context)
 
             result.onSuccess { response ->
-                Log.d("LOGIN/VM", "verifyCode() success | response=$response | response.success=${response.success}")
+                Log.d(
+                    "LOGIN/VM",
+                    "verifyCode() success | response=$response | response.success=${response.success}"
+                )
 
                 if (response.success == 1) {
                     _verifyStatus.emit(VerifyStatus.Success)
                     Log.d("LOGIN/VM", "verifyCode -> Success")
                 } else {
                     _verifyStatus.emit(VerifyStatus.Failure)
-                    Log.e("LOGIN/VM", "verifyCode -> Failure (server returned success=${response.success})")
+                    Log.e(
+                        "LOGIN/VM",
+                        "verifyCode -> Failure (server returned success=${response.success})"
+                    )
                 }
 
             }.onFailure { exception ->
@@ -137,8 +147,23 @@ class LoginViewModel @Inject constructor(
         }
     }
 
+    fun savePhone(phone: String) {
+        viewModelScope.launch {
+            localRepository.savePhoneNumber(phone)
+        }
+    }
+fun getPhoneNumber():LiveData<String>{
+    Log.d("HILT-VM", "ViewModel created, repository = $localRepository")
+    val phone = MutableLiveData<String>()
+    viewModelScope.launch {
+        phone.postValue(localRepository.getPhoneNumber())
 
+    }
+    return phone
 }
+    }
+
+
 
 
 
