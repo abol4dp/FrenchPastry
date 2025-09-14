@@ -62,6 +62,11 @@ class LoginViewModel @Inject constructor(
     val errorVerifyCode = repository.errorVerifyCode
     var userPhone by mutableStateOf("  ")
 
+
+    private val _loading = MutableStateFlow(false)
+    val loading: StateFlow<Boolean> = _loading
+
+
     private val _sendCodeStatus = MutableStateFlow(SendCodeStatus.Idle)
     val sendCodeStatus: StateFlow<SendCodeStatus> = _sendCodeStatus
 
@@ -71,9 +76,16 @@ class LoginViewModel @Inject constructor(
 
     fun getMain() {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getMain()
-        }
+            _loading.value = true
+            val result = repository.getMain()
+            result.onSuccess { response ->
+                _mainResponse.value = response
+            }.onFailure { error ->
 
+                println("خطا: ${error.message}")
+            }
+            _loading.value = false
+        }
     }
 
     fun resetVerifyStatus() {
@@ -152,6 +164,8 @@ class LoginViewModel @Inject constructor(
             localRepository.savePhoneNumber(phone)
         }
     }
+
+
 fun getPhoneNumber():LiveData<String>{
     Log.d("HILT-VM", "ViewModel created, repository = $localRepository")
     val phone = MutableLiveData<String>()

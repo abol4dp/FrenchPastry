@@ -1,5 +1,6 @@
 [versions]
 agp = "8.8.0"
+coilCompose = "2.6.0"
 converterGson = "2.9.0"
 kotlin = "2.1.0"
 coreKtx = "1.13.0"
@@ -24,6 +25,7 @@ room = "2.7.2"
 
 
 [libraries]
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version = "1.2.0" }

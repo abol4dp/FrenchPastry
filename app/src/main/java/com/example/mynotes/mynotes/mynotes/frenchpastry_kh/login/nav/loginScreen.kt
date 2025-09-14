@@ -70,19 +70,12 @@ fun LoginScreen(
     var timeLeft by remember { mutableIntStateOf(0) }
     var isTimerRunning by remember { mutableStateOf(false) }
 
-    val savedPhone by loginViewModel.getPhoneNumber().observeAsState()
 
 
 
 
-    LaunchedEffect(savedPhone) {
-        Log.d("HILT-COMPOSE", "Saved phone = $savedPhone")
-        if (!savedPhone.isNullOrEmpty()) {
-            navController.navigate("homescreen") {
-                popUpTo("loginscreen") { inclusive = true }
-            }
-        }
-    }
+
+
 
     LaunchedEffect(isTimerRunning) {
         if (isTimerRunning) {
