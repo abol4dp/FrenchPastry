@@ -29,4 +29,11 @@ object AppModule {
     fun provideRetrofitApiService(retrofit: Retrofit): LoginApiService =
         retrofit.create(LoginApiService::class.java)
 
+
+
+
+    @Provides
+    @Singleton
+    fun provideProductApiService(retrofit: Retrofit): ProductService =
+        retrofit.create(ProductService::class.java)
 }

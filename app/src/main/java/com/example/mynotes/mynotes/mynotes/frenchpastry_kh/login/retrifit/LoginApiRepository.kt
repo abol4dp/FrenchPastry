@@ -7,14 +7,15 @@ import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.SendCodeData
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.VerifyCodeData
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.homemodel.HomeResponse
 import com.google.gson.Gson
+import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.product_detail.ProductResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
 class LoginApiRepository @Inject constructor(
     private val apiService: LoginApiService,
-
+    private val productApi: ProductService
 ) {
-    val errorVerifyCode =MutableStateFlow(false)
+    val errorVerifyCode = MutableStateFlow(false)
 
     suspend fun getMain(): Result<HomeResponse> {
         return try {
@@ -32,7 +33,6 @@ class LoginApiRepository @Inject constructor(
 
         }
     }
-
 
     suspend fun sendCodePhones(phone: String, context: Context): Result<SendCodeData> {
 
@@ -60,9 +60,12 @@ class LoginApiRepository @Inject constructor(
                 Log.d("LOGIN/REPO", "HTTP body=$body")
                 body?.let { Result.success(it) }
                     ?: Result.failure(Exception("پاسخ خالی"))
-            }else {
+            } else {
                 val err = response.errorBody()?.string()
-                Log.e("LOGIN/REPO", "HTTP ERROR ${response.code()} | ${response.message()} | body=$err") // LOG
+                Log.e(
+                    "LOGIN/REPO",
+                    "HTTP ERROR ${response.code()} | ${response.message()} | body=$err"
+                ) // LOG
                 Result.failure(Exception("HTTP ${response.code()} - ${response.message()} - $err"))
             }
         } catch (e: Exception) {
@@ -102,7 +105,20 @@ class LoginApiRepository @Inject constructor(
             Result.failure(Exception("خطا در اتصال: ${e.message}"))
         }
     }
+    }
+  /* suspend fun getProductDetails(id: Int): Result<ProductResponse> {
+        return try {
+            val response = productApi.getProductById(id)
+            if (response.isSuccessful) {
+                response.body()?.let { Result.success(it) }
+                    ?: Result.failure(Exception("پاسخ خالی"))
+            } else {
+                Result.failure(Exception("خطا: ${response.message()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(Exception("خطا در اتصال: ${e.message}"))
+        }
 
-
-}
+    }
+}*/
 

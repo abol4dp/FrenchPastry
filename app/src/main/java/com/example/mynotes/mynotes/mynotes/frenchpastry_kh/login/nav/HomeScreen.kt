@@ -1,5 +1,6 @@
 package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.nav
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,18 +36,21 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.ext.SealedClassNavName
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.viewmodel.LoginViewModel
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.homemodel.PastryItem
+
+
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun HomeScreen(navController: NavHostController, viewModel: LoginViewModel) {
-
     val mainResponse by viewModel.mainResponse.collectAsState()
     val loading by viewModel.loading.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.getMain()
+        Log.d("HOME/SCREEN", "Pastries IDs: ${mainResponse.pastries.flatMap { it.pastries.map { item -> item.ID } }}")
     }
     when {
         loading -> {
@@ -54,21 +58,16 @@ fun HomeScreen(navController: NavHostController, viewModel: LoginViewModel) {
                 modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator()
-
-
             }
         }
-
         mainResponse != null -> {
             val response = mainResponse
-
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(12.dp)
             ) {
                 items(response.pastries) { pastriesItem ->
-
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
@@ -79,55 +78,38 @@ fun HomeScreen(navController: NavHostController, viewModel: LoginViewModel) {
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(bottom = 8.dp)
-
                         )
                         FlowRow(
                             modifier = Modifier.fillMaxSize(),
                             maxItemsInEachRow = 2,
                             horizontalArrangement = Arrangement.SpaceBetween
-
                         ) {
                             pastriesItem.pastries.forEach { item ->
                                 PastriesItemCard(
-                                    item = item
+                                    item = item,
+                                    navController = navController
                                 )
-
-
                             }
                         }
-
-
                     }
-
                 }
-
-
             }
-
-
         }
-
         else -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
                 Text("محصولی یافت نشد")
-
-
             }
-
-
         }
-
     }
-
-
 }
 
 @Composable
 fun PastriesItemCard(
-    item: PastryItem
+    item: PastryItem,
+    navController: NavHostController
 ) {
     Card(
         elevation = CardDefaults.cardElevation(2.dp),
@@ -136,13 +118,16 @@ fun PastriesItemCard(
             .padding(6.dp)
             .width(160.dp)
             .height(230.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        onClick = {
+            Log.d("DETAILS/NAV", "Navigating to details with id=${item.ID}")
+            navController.navigate("${SealedClassNavName.DetailsPastry.Route}/${item.ID}")
+        }
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
             AsyncImage(
                 model = item.thumbnail,
                 contentDescription = item.title,
@@ -153,9 +138,7 @@ fun PastriesItemCard(
                     .clip(RoundedCornerShape(12.dp)),
                 contentScale = ContentScale.Crop
             )
-
             Spacer(modifier = Modifier.height(6.dp))
-
             Text(
                 text = item.title,
                 maxLines = 2,
@@ -163,9 +146,7 @@ fun PastriesItemCard(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(horizontal = 6.dp)
             )
-
             Spacer(modifier = Modifier.height(4.dp))
-
             if (item.has_discount) {
                 Text(
                     text = "${item.price} تومان",
@@ -176,30 +157,12 @@ fun PastriesItemCard(
                         textDecoration = TextDecoration.LineThrough
                     )
                 )
-
-
             }
-
             Text(
                 text = "${item.sale_price} تومان",
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(horizontal = 6.dp)
-
             )
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

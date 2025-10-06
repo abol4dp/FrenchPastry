@@ -1,7 +1,6 @@
 package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.viewmodel
 
 import android.content.Context
-import android.provider.ContactsContract.CommonDataKinds.Phone
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -16,6 +15,7 @@ import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.SendCodeData
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.VerifyCodeData
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.homemodel.HomeResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
+import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.product_detail.ProductResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -36,7 +36,9 @@ class LoginViewModel @Inject constructor(
     val mainResponse: StateFlow<HomeResponse> = _mainResponse.asStateFlow()
 
 
-    private val _sendCode = MutableStateFlow<SendCodeData>(SendCodeData())
+
+
+    private val _sendCode = MutableStateFlow(SendCodeData())
     val sendCode: StateFlow<SendCodeData> = _sendCode.asStateFlow()
 
 
@@ -87,6 +89,18 @@ class LoginViewModel @Inject constructor(
             _loading.value = false
         }
     }
+
+    /*fun getProduct(id: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = repository.getProductDetails(id)
+            result.onSuccess { response ->
+                Log.d("VIEWMODEL", "Product loaded -> $response")
+                _productDetails.value = response
+            }.onFailure { error ->
+                Log.e("VIEWMODEL", "Error loading product: ${error.message}")
+            }
+        }
+    }*/
 
     fun resetVerifyStatus() {
         _verifyStatus.value = VerifyStatus.Idle
@@ -165,17 +179,16 @@ class LoginViewModel @Inject constructor(
         }
     }
 
+    fun getPhoneNumber(): LiveData<String> {
+        Log.d("HILT-VM", "ViewModel created, repository = $localRepository")
+        val phone = MutableLiveData<String>()
+        viewModelScope.launch {
+            phone.postValue(localRepository.getPhoneNumber())
 
-fun getPhoneNumber():LiveData<String>{
-    Log.d("HILT-VM", "ViewModel created, repository = $localRepository")
-    val phone = MutableLiveData<String>()
-    viewModelScope.launch {
-        phone.postValue(localRepository.getPhoneNumber())
-
+        }
+        return phone
     }
-    return phone
 }
-    }
 
 
 

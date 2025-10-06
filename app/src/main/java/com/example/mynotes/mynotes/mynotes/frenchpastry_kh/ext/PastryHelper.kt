@@ -28,9 +28,9 @@ object PastryHelper {
 
     fun pastryByLocateAndSeparator(price: String): String {
         val priceWithoutCommas = price.replace(",", "")
-        // اول عدد را به صورت اعداد انگلیسی جداسازی کن
+
         val formattedPrice = pastryBySeparator(priceWithoutCommas)
-        // سپس اعداد جدا شده را به فارسی تبدیل کن
+
         return pastryByLocate(formattedPrice)
     }
 
