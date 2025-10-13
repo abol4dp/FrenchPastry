@@ -7,10 +7,9 @@ import retrofit2.http.Path
 
 interface ProductService {
 //details
-    @GET("v1/pastryprod/{id}")
+@GET("v1/pastry/{id}")
 suspend fun getProductById(
-    @Path("id") id:Int
-
+    @Path("id") id: Int
 ): Response<ProductResponse>
 
 }

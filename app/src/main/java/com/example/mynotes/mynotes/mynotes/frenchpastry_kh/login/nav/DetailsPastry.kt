@@ -3,9 +3,7 @@ package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.nav
 import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -23,12 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.ext.SealedClassNavName
-import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.viewmodel.LoginViewModel
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.viewmodel.ProductViewModel
-import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.product_detail.Material
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.observeOn
 
 @Composable
 fun DetailsPastry(
