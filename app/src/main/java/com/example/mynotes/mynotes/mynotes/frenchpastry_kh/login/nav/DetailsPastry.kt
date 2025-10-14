@@ -1,6 +1,7 @@
 package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.nav
 
 import android.util.Log
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.viewmodel.ProductViewModel
@@ -30,58 +32,68 @@ fun DetailsPastry(
     productid: Int
 ) {
     val product by viewModel.product.collectAsState()
-    Log.d("DETAILS/SCREEN", "Collected product -> $product")
     val loading by viewModel.loading.collectAsState()
     val error by viewModel.error.collectAsState()
 
-
     LaunchedEffect(productid) {
         viewModel.loadProduct(productid)
-
     }
 
-    when {
-        loading -> {
-            Box(
-                modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
+    Box(
+        modifier = Modifier.fillMaxSize(), Alignment.Center
+    ) {
 
-            ) {
-                CircularProgressIndicator()
+
+        when {
+
+            loading -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
+
+                ) { CircularProgressIndicator() }
+
             }
 
-        }
-
-        error != null -> {
-            Text(
-                text = error ?: "خطای ناشناخته",
-                color = Color.Red,
-                modifier = Modifier.padding(16.dp)
-            )
-        }
-
-        product != null -> {
-            Column(modifier = Modifier.padding(16.dp)) {
+            error != null -> {
                 Text(
-                    text = product!!.title,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = 12.dp)
-
-
+                    text = "Error", color = Color.Red, fontSize = 30.sp
                 )
-                LazyColumn {
-                    items(product!!.materials) { material ->
-                        Text(
-                            text = "${material.material} : ${material.amount}",
-                            style = MaterialTheme.typography.bodyLarge,
-                            modifier = Modifier.padding(4.dp)
-                        )
+
+
+            }
+
+            product != null -> {
+
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+
+                    Text(
+                        text = product!!.title,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(bottom = 12.dp)
+                    )
+
+                    LazyColumn {
+                        items(product!!.materials) { materials ->
+
+
+                            Text(
+                                text = "${materials.material} : ${materials.amount}",
+                                modifier = Modifier.padding(4.dp)
+
+                            )
+                        }
 
 
                     }
 
 
                 }
+
 
             }
 
