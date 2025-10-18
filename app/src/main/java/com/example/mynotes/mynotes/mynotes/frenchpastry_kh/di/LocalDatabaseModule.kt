@@ -1,4 +1,4 @@
-package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.di
+package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.di
 
 import android.content.Context
 import android.util.Log
@@ -29,13 +29,11 @@ object LocalDatabaseModule {
 
     @Provides
     fun provideLoginDao(db: LoginDataBase): LoginDao {
-        Log.d("HILT-DB", "Database is being created")
         return db.userDao()
     }
 
     @Provides
     fun provideLocalRepository(dao: LoginDao): LocalRoomRepository {
-        Log.d("HILT-DB", "LocalRoomRepository is being provided")
         return LocalRoomRepository(dao)
     }
 }

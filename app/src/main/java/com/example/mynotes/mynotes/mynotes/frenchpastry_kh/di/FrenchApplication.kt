@@ -1,4 +1,5 @@
-package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.di
+package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.di
+
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

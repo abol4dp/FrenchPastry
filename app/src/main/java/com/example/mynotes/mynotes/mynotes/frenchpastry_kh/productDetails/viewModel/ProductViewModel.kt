@@ -1,9 +1,9 @@
-package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.viewmodel
+package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.productDetails.viewModel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.retrifit.ProductService
+import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.productDetails.retrofit.ProductService
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.product_detail.Pastry
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

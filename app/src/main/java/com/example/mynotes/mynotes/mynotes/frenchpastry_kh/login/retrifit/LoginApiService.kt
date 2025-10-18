@@ -1,7 +1,7 @@
 package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.retrifit
 
-import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.SendCodeData
-import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.VerifyCodeData
+import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.login.SendCodeData
+import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.login.VerifyCodeData
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.homemodel.HomeResponse
 import retrofit2.Response
 import retrofit2.http.Field

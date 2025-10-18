@@ -1,5 +1,8 @@
-package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.retrifit
+package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.di
 
+import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.home.retrofit.HomeApiService
+import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.retrifit.LoginApiService
+import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.productDetails.retrofit.ProductService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,8 +35,17 @@ object AppModule {
 
 
 
+
     @Provides
     @Singleton
     fun provideProductApiService(retrofit: Retrofit): ProductService =
         retrofit.create(ProductService::class.java)
+
+
+
+@Provides
+@Singleton
+fun provideHomeApiService(retrofit: Retrofit): HomeApiService =
+    retrofit.create(HomeApiService::class.java)
+
 }

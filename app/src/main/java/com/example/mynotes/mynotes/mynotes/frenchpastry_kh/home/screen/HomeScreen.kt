@@ -1,4 +1,4 @@
-package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.nav
+package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.home.screen
 
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
@@ -34,23 +34,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.ext.SealedClassNavName
-import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.viewmodel.LoginViewModel
+import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.home.viewModel.HomeViewModel
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.homemodel.PastryItem
-
 
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun HomeScreen(navController: NavHostController, viewModel: LoginViewModel) {
+fun HomeScreen(navController: NavHostController, viewModel: HomeViewModel = hiltViewModel()) {
     val mainResponse by viewModel.mainResponse.collectAsState()
     val loading by viewModel.loading.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.getMain()
-        Log.d("HOME/SCREEN", "Pastries IDs: ${mainResponse.pastries.flatMap { it.pastries.map { item -> item.ID } }}")
+        Log.d(
+            "HOME/SCREEN",
+            "Pastries IDs: ${mainResponse.pastries.flatMap { it.pastries.map { item -> item.ID } }}"
+        )
     }
     when {
         loading -> {
@@ -60,6 +63,7 @@ fun HomeScreen(navController: NavHostController, viewModel: LoginViewModel) {
                 CircularProgressIndicator()
             }
         }
+
         mainResponse != null -> {
             val response = mainResponse
             LazyColumn(
@@ -95,6 +99,7 @@ fun HomeScreen(navController: NavHostController, viewModel: LoginViewModel) {
                 }
             }
         }
+
         else -> {
             Box(
                 modifier = Modifier.fillMaxSize(),

@@ -11,12 +11,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.db.LocalRoomRepository
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.retrifit.LoginApiRepository
-import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.SendCodeData
-import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.VerifyCodeData
-import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.homemodel.HomeResponse
+import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.login.SendCodeData
+import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.login.VerifyCodeData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.product_detail.ProductResponse
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -30,12 +27,6 @@ class LoginViewModel @Inject constructor(
     private val repository: LoginApiRepository,
     private val localRepository: LocalRoomRepository
 ) : ViewModel() {
-
-
-    private val _mainResponse = MutableStateFlow<HomeResponse>(HomeResponse())
-    val mainResponse: StateFlow<HomeResponse> = _mainResponse.asStateFlow()
-
-
 
 
     private val _sendCode = MutableStateFlow(SendCodeData())
@@ -76,31 +67,7 @@ class LoginViewModel @Inject constructor(
     enum class VerifyStatus { Idle, Success, Failure }
     enum class SendCodeStatus { Idle, Success, Failure }
 
-    fun getMain() {
-        viewModelScope.launch(Dispatchers.IO) {
-            _loading.value = true
-            val result = repository.getMain()
-            result.onSuccess { response ->
-                _mainResponse.value = response
-            }.onFailure { error ->
 
-                println("خطا: ${error.message}")
-            }
-            _loading.value = false
-        }
-    }
-
-    /*fun getProduct(id: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val result = repository.getProductDetails(id)
-            result.onSuccess { response ->
-                Log.d("VIEWMODEL", "Product loaded -> $response")
-                _productDetails.value = response
-            }.onFailure { error ->
-                Log.e("VIEWMODEL", "Error loading product: ${error.message}")
-            }
-        }
-    }*/
 
     fun resetVerifyStatus() {
         _verifyStatus.value = VerifyStatus.Idle

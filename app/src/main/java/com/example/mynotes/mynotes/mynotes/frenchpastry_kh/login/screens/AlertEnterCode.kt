@@ -1,6 +1,6 @@
 @file:Suppress("NAME_SHADOWING")
 
-package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.nav
+package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.screens
 
 import android.widget.Toast
 import androidx.compose.foundation.clickable

@@ -1,4 +1,4 @@
-package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model
+package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.login
 
 data class User(
     val avatar: String="",
