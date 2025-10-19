@@ -5,7 +5,7 @@ import android.content.Context
 import android.os.Build
 import android.provider.Settings
 
-import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.di.AppModule
+import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.di.AppModule
 import java.math.BigInteger
 import java.security.MessageDigest
 

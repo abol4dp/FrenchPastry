@@ -1,4 +1,4 @@
-package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.di
+package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.di
 
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.home.retrofit.HomeApiService
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.retrifit.LoginApiService

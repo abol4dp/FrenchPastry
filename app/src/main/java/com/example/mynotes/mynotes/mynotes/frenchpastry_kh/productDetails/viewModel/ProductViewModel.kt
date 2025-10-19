@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.productDetails.retrofit.ProductService
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.product_detail.Pastry
+import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.productDetails.retrofit.ProductRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProductViewModel @Inject constructor(
-    private val service: ProductService
+    private val repository: ProductRepository
 ) : ViewModel() {
 
     private val _product = MutableStateFlow<Pastry?>(null)
@@ -32,28 +33,29 @@ class ProductViewModel @Inject constructor(
         viewModelScope.launch {
             _loading.value = true
             try {
-                val response = service.getProductById(id)
-                Log.d("DETAILS/VM", "API Raw Response: ${response.raw()}")
-                Log.d("DETAILS/VM", "API Headers: ${response.headers()}")
+                val result = repository.getProductById(id)
+result.fold(
+    onSuccess = {
+        Log.d("DETAILS/VM", "Parsed product: ${it.pastry}")
+        _product.value = it.pastry
+    },
+    onFailure = {
+        Log.e("DETAILS/VM", "Error: ${it.message}")
+        _error.value = it.message ?: "خطا در دریافت اطلاعات"
 
-                if (response.isSuccessful) {
-                    Log.d("DETAILS/VM", "Full body: ${response.body()}")
-                    _product.value = response.body()?.pastry
-                    Log.d("DETAILS/VM", "Parsed product: ${_product.value}")
-                } else {
-                    Log.e(
-                        "DETAILS/VM",
-                        "API Failed -> code=${response.code()} | message=${response.message()}"
-                    )
-                    _error.value = "خطا در دریافت اطلاعات"
-                }
-            } catch (e: Exception) {
+    }
+)
+    }catch (e : Exception){
                 Log.e("DETAILS/VM", "Exception -> ${e.localizedMessage}", e)
-                _error.value = e.message
-            } finally {
-                _loading.value = false
-            }
-        }
+                _error.value = e.message ?: "خطا در دریافت اطلاعات"
+
+    } finally {
+        _loading.value = false
+    }
+
+
+    }
+
 
     }
 }

@@ -1,4 +1,4 @@
-package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.di
+package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.login.di
 
 import android.content.Context
 import android.util.Log
