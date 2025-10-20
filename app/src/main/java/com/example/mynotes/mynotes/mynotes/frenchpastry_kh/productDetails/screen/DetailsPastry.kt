@@ -21,7 +21,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.ext.Resource
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.productDetails.viewModel.ProductViewModel
 
 @Composable
@@ -30,9 +32,7 @@ fun DetailsPastry(
     viewModel: ProductViewModel = hiltViewModel(),
     productid: Int
 ) {
-    val product by viewModel.product.collectAsState()
-    val loading by viewModel.loading.collectAsState()
-    val error by viewModel.error.collectAsState()
+    val state by viewModel.productState.collectAsState()
 
     LaunchedEffect(productid) {
         viewModel.loadProduct(productid)
@@ -43,9 +43,9 @@ fun DetailsPastry(
     ) {
 
 
-        when {
+        when (state) {
 
-            loading -> {
+            is Resource.Loading -> {
                 Box(
                     modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
 
@@ -53,15 +53,14 @@ fun DetailsPastry(
 
             }
 
-            error != null -> {
-                Text(
-                    text = "Error", color = Color.Red, fontSize = 30.sp
-                )
+            is Resource.Error -> {
+                val message = (state as Resource.Error).message
+                Text("خطا: $message", color = Color.Red)
 
 
             }
 
-            product != null -> {
+            is Resource.Success -> {
 
                 Column(
                     modifier = Modifier.fillMaxSize(),
@@ -69,15 +68,12 @@ fun DetailsPastry(
                     verticalArrangement = Arrangement.Center
                 ) {
 
-                    Text(
-                        text = product!!.title,
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(bottom = 12.dp)
-                    )
-
+                    val pastry = (state as Resource.Success).data.pastry
+                    if (pastry != null) {
+                        Text("نام شیرینی :${pastry.title}")
+                    }
                     LazyColumn {
-                        items(product!!.materials) { materials ->
+                        items(pastry!!.materials) { materials ->
 
 
                             Text(
