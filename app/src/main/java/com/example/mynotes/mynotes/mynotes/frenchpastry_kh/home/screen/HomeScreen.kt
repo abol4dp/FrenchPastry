@@ -1,6 +1,7 @@
 package com.example.mynotes.mynotes.mynotes.frenchpastry_kh.home.screen
 
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,7 +15,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -37,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.R
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.ext.SealedClassNavName
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.home.viewModel.HomeViewModel
 import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.homemodel.PastryItem
@@ -47,6 +51,15 @@ import com.example.mynotes.mynotes.mynotes.frenchpastry_kh.model.homemodel.Pastr
 fun HomeScreen(navController: NavHostController, viewModel: HomeViewModel = hiltViewModel()) {
     val mainResponse by viewModel.mainResponse.collectAsState()
     val loading by viewModel.loading.collectAsState()
+
+
+    val sliderImages = listOf(
+        R.drawable.b1,
+        R.drawable.b2,
+        R.drawable.b3
+    )
+
+
 
     LaunchedEffect(Unit) {
         viewModel.getMain()
@@ -71,6 +84,14 @@ fun HomeScreen(navController: NavHostController, viewModel: HomeViewModel = hilt
                     .fillMaxSize()
                     .padding(12.dp)
             ) {
+                //Slider
+                item {
+                    TopSlider(sliderList = sliderImages)
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+
+
+
                 items(response.pastries) { pastriesItem ->
                     Column(
                         modifier = Modifier
