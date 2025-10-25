@@ -77,7 +77,7 @@ fun HomeScreen(navController: NavHostController, viewModel: HomeViewModel = hilt
             }
         }
 
-        mainResponse != null -> {
+        else -> {
             val response = mainResponse
             LazyColumn(
                 modifier = Modifier
@@ -118,15 +118,6 @@ fun HomeScreen(navController: NavHostController, viewModel: HomeViewModel = hilt
                         }
                     }
                 }
-            }
-        }
-
-        else -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("محصولی یافت نشد")
             }
         }
     }
